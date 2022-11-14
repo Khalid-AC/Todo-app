@@ -32,7 +32,7 @@ class FilterdTodosState extends Equatable {
   bool get stringify => true;
 }
 
-class FilterdTodo with ChangeNotifier {
+class FilterdTodos with ChangeNotifier {
   FilterdTodosState _state = FilterdTodosState.initial();
   FilterdTodosState get state => _state;
 

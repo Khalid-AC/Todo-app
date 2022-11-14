@@ -22,21 +22,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<TodoList, ActiveTodoCount>(
           create: (context) => ActiveTodoCount(),
           update:
-              ((context, TodoList todoList, ActiveTodoCount? activeTodoCount) {
-            activeTodoCount!.update(todoList);
-            return activeTodoCount;
-          }),
+              ((context, TodoList todoList, ActiveTodoCount? activeTodoCount) =>
+            activeTodoCount!..update(todoList)
+            
+          ),
         ),
 
         //
         ChangeNotifierProxyProvider3<TodoFilter, TodoSearch, TodoList,
-                FilterdTodo>(
-            create: ((context) => FilterdTodo()),
-            update: ((context, TodoFilter todoFilter, TodoSearch todoSearch,
-                TodoList todoList, FilterdTodo? filterdTodo) {
-              filterdTodo!.update(todoFilter, todoSearch, todoList);
-              return filterdTodo;
-            }))
+                FilterdTodos>(
+            create: (_) => FilterdTodos(),
+            update: (_, TodoFilter todoFilter, TodoSearch todoSearch,
+                    TodoList todoList, FilterdTodos? filterdTodo) =>
+                filterdTodo!..update(todoFilter, todoSearch, todoList)),
+
+        
       ],
 
       //

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/providers/active_todo_count.dart';
 import 'package:todo_app/providers/providers.dart';
@@ -19,12 +20,13 @@ class _TodosPageState extends State<TodosPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
             child: Column(
               children: const [
                 TodoHeader(),
                 CreateTodo(),
                 SearchAndFilterTodo(),
+                ShowTodos(),
               ],
             ),
           ),
@@ -115,7 +117,6 @@ class SearchAndFilterTodo extends StatelessWidget {
             filterButton(context, Filter.all),
             filterButton(context, Filter.completed),
             filterButton(context, Filter.active),
-
           ],
         )
       ],
@@ -125,7 +126,9 @@ class SearchAndFilterTodo extends StatelessWidget {
 
 Widget filterButton(BuildContext context, Filter filter) {
   return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        context.read<TodoFilter>().changeFilter(filter);
+      },
       child: Text(
         filter == Filter.all
             ? "All"
@@ -139,4 +142,97 @@ Widget filterButton(BuildContext context, Filter filter) {
 Color textColor(BuildContext context, Filter filter) {
   final currentFilter = context.watch<TodoFilter>().state.filter;
   return currentFilter == filter ? Colors.blue : Colors.grey;
+}
+
+class ShowTodos extends StatelessWidget {
+  const ShowTodos({Key? key}) : super(key: key);
+
+  Widget showBackground(int direction) {
+    return Container(
+      margin: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      color: Colors.red,
+      alignment: direction == 0 ? Alignment.centerLeft : Alignment.centerRight,
+      child: const Icon(
+        Icons.delete,
+        size: 30.0,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final todos = context.watch<FilterdTodos>().state.filterdTodos;
+
+    return ListView.separated(
+      primary: false,
+      shrinkWrap: true,
+      itemCount: todos.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return const Divider(color: Colors.grey);
+      },
+      itemBuilder: (BuildContext context, int index) {
+        return Dismissible(
+          key: ValueKey(todos[index].id),
+
+          //
+          onDismissed: (_) {
+            context.read<TodoList>().removeTodo(todos[index].id);
+          },
+
+          //
+          confirmDismiss: (_) {
+            return showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Are you sure ?"),
+                    content: const Text("Do you really want to delete?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text("No")),
+                      TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text("YES")),
+                    ],
+                  );
+                });
+          },
+          background: showBackground(0),
+          secondaryBackground: showBackground(1),
+          child: TodoItem(todo: todos[index]),
+        );
+      },
+    );
+  }
+}
+
+class TodoItem extends StatefulWidget {
+  final Todo todo;
+  const TodoItem({
+    Key? key,
+    required this.todo,
+  }) : super(key: key);
+
+  @override
+  State<TodoItem> createState() => _TodoItemState();
+}
+
+class _TodoItemState extends State<TodoItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Checkbox(
+        value: widget.todo.isCompleted,
+        onChanged: (_) {
+          context.read<TodoList>().toggleTodo(widget.todo.id);
+        },
+      ),
+      title:
+          Text(widget.todo.description, style: const TextStyle(fontSize: 20.0)),
+    );
+  }
 }

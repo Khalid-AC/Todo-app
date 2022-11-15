@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:todo_app/providers/providers.dart';
+
 import 'package:todo_app/providers/todo_list.dart';
 
 class ActiveTodoCountState extends Equatable {
@@ -29,8 +31,16 @@ class ActiveTodoCountState extends Equatable {
 }
 
 class ActiveTodoCount with ChangeNotifier {
-  ActiveTodoCountState _state = ActiveTodoCountState.initial();
+  //ActiveTodoCountState _state = ActiveTodoCountState.initial();
+  late ActiveTodoCountState _state;
   ActiveTodoCountState get state => _state;
+
+  final int initialActiveTodoCount;
+  ActiveTodoCount({
+    required this.initialActiveTodoCount,
+  }) {
+    _state = ActiveTodoCountState(activeTodoCount: initialActiveTodoCount);
+  }
 
   void update(TodoList todoList) {
     final newActiveTodoCount =

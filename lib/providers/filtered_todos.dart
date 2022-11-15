@@ -33,7 +33,8 @@ class FilterdTodosState extends Equatable {
   bool get stringify => true;
 }
 
-class FilterdTodos with ChangeNotifier {
+// Using ChangNotifierProxyProvider
+/*class FilterdTodos with ChangeNotifier {
   //FilterdTodosState _state = FilterdTodosState.initial();
   late FilterdTodosState _state;
   FilterdTodosState get state => _state;
@@ -77,5 +78,47 @@ class FilterdTodos with ChangeNotifier {
 
     _state = _state.copyWith(filterdTodos: filteredTodos);
     notifyListeners();
+  }
+}*/
+
+class FilteredTodos {
+  TodoFilter todoFilter;
+  TodoSearch todoSearch;
+  TodoList todoList;
+
+  //
+  FilteredTodos({
+    required this.todoFilter,
+    required this.todoSearch,
+    required this.todoList,
+  });
+
+  FilterdTodosState get state {
+    List<Todo> filteredTodos;
+
+    switch (todoFilter.state.filter) {
+      case Filter.completed:
+        filteredTodos =
+            todoList.state.todos.where((todo) => todo.isCompleted).toList();
+        break;
+      case Filter.active:
+        filteredTodos =
+            todoList.state.todos.where((todo) => !todo.isCompleted).toList();
+        break;
+      case Filter.all:
+      default:
+        filteredTodos = todoList.state.todos;
+        break;
+    }
+
+    if (todoSearch.state.searchTerm.isNotEmpty) {
+      filteredTodos = todoList.state.todos
+          .where((todo) => todo.description
+              .toLowerCase()
+              .contains(todoSearch.state.searchTerm))
+          .toList();
+    }
+
+    return FilterdTodosState(filterdTodos: filteredTodos);
   }
 }

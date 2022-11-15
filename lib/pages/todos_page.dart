@@ -167,7 +167,7 @@ class ShowTodos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todos = context.watch<FilterdTodos>().state.filterdTodos;
+    final todos = context.watch<FilteredTodos>().state.filterdTodos;
 
     return ListView.separated(
       primary: false,

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/providers/active_todo_count.dart';
 import 'package:todo_app/providers/providers.dart';
+import 'package:todo_app/utils/debounce.dart';
 
 class TodosPage extends StatefulWidget {
   const TodosPage({Key? key}) : super(key: key);
@@ -22,11 +23,11 @@ class _TodosPageState extends State<TodosPage> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
             child: Column(
-              children: const [
-                TodoHeader(),
-                CreateTodo(),
+              children:  [
+                const TodoHeader(),
+                const CreateTodo(),
                 SearchAndFilterTodo(),
-                ShowTodos(),
+                const ShowTodos(),
               ],
             ),
           ),
@@ -90,7 +91,8 @@ class _CreateTodoState extends State<CreateTodo> {
 }
 
 class SearchAndFilterTodo extends StatelessWidget {
-  const SearchAndFilterTodo({Key? key}) : super(key: key);
+  SearchAndFilterTodo({Key? key}) : super(key: key);
+  final debounce = Debounce(milliseconds: 1000);
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +108,9 @@ class SearchAndFilterTodo extends StatelessWidget {
           ),
           onChanged: (String? newSearchTerm) {
             if (newSearchTerm != null) {
-              context.read<TodoSearch>().setSearchTerm(newSearchTerm);
+              debounce.run(() {
+                context.read<TodoSearch>().setSearchTerm(newSearchTerm);
+              });
             }
           },
         ),

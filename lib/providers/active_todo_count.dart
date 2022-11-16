@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:state_notifier/state_notifier.dart';
 
 import 'package:todo_app/providers/providers.dart';
 import 'package:todo_app/providers/todo_list.dart';
@@ -53,7 +54,7 @@ class ActiveTodoCountState extends Equatable {
 }*/
 
 // Using Proxy Provider (because ActiveToDoCount state depends only on other states not on its own)
-class ActiveTodoCount {
+/*class ActiveTodoCount {
   final TodoList todoList;
   ActiveTodoCount({
     required this.todoList,
@@ -64,4 +65,19 @@ class ActiveTodoCount {
           .where((todo) => !todo.isCompleted)
           .toList()
           .length);
+}*/
+
+class ActiveTodoCount extends StateNotifier<ActiveTodoCountState>
+    with LocatorMixin {
+  ActiveTodoCount() : super(ActiveTodoCountState.initial());
+
+  @override
+  void update(Locator watch) {
+    final todos = watch<TodoListState>().todos;
+
+    state = state.copyWith(
+        activeTodoCount:
+            todos.where((todo) => !todo.isCompleted).toList().length);
+    super.update(watch);
+  }
 }

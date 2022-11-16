@@ -23,9 +23,10 @@ class _TodosPageState extends State<TodosPage> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
             child: Column(
-              children:  [
+              children: [
                 const TodoHeader(),
                 const CreateTodo(),
+                const SizedBox(height: 30.0),
                 SearchAndFilterTodo(),
                 const ShowTodos(),
               ],
@@ -50,7 +51,7 @@ class TodoHeader extends StatelessWidget {
           style: TextStyle(fontSize: 40.0),
         ),
         Text(
-          "${context.watch<ActiveTodoCount>().state.activeTodoCount} items left",
+          "${context.watch<ActiveTodoCountState>().activeTodoCount} items left",
           style: const TextStyle(fontSize: 20.0, color: Colors.redAccent),
         ),
       ],
@@ -144,7 +145,7 @@ Widget filterButton(BuildContext context, Filter filter) {
 }
 
 Color textColor(BuildContext context, Filter filter) {
-  final currentFilter = context.watch<TodoFilter>().state.filter;
+  final currentFilter = context.watch<TodoFilterState>().filter;
   return currentFilter == filter ? Colors.blue : Colors.grey;
 }
 
@@ -167,7 +168,7 @@ class ShowTodos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final todos = context.watch<FilteredTodos>().state.filterdTodos;
+    final todos = context.watch<FilterdTodosState>().filterdTodos;
 
     return ListView.separated(
       primary: false,
@@ -253,7 +254,7 @@ class _TodoItemState extends State<TodoItem> {
               return StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
                 return AlertDialog(
-                  title: Text("Edit Todo"),
+                  title: const Text("Edit Todo"),
                   content: TextField(
                     controller: textController,
                     autofocus: true,

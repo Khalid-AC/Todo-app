@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'package:todo_app/providers/providers.dart';

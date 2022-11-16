@@ -11,4 +11,4 @@ Simple Todo flutter application which uses **Provider** State Management Solutio
 #### Mark a task as completed
 #### Tasks Filtering
 
-<img src = "APP/1.jpg" height = "500"> <img src = "APP/2.jpg" height = "500"> <img src = "APP/3.jpg" height = "500"> <img src = "APP/4.jpg" height = "500"> <img src = "APP/5.jpg" height = "500"> 
+<img src = "app/1.jpg" height = "500"> <img src = "app/2.jpg" height = "500"> <img src = "app/3.jpg" height = "500"> <img src = "app/4.jpg" height = "500"> <img src = "app/5.jpg" height = "500"> 
